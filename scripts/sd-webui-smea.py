@@ -48,7 +48,10 @@ def init():
     samplers_map_smea = {x.name: x for x in samplers_data_smea}
     sd_samplers_kdiffusion.k_diffusion_samplers_map = {**sd_samplers_kdiffusion.k_diffusion_samplers_map, **samplers_map_smea}
 
-    sd_samplers.all_samplers.extend(samplers_data_smea)
+    for i, item in enumerate(sd_samplers.all_samplers):
+        if "Euler" in item.name:
+            sd_samplers.all_samplers = sd_samplers.all_samplers[:i + 1] + [*samplers_data_smea] + sd_samplers.all_samplers[i + 1:]
+            break
     sd_samplers.all_samplers_map = {x.name: x for x in sd_samplers.all_samplers}
     sd_samplers.set_samplers()
 
