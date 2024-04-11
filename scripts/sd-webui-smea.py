@@ -163,11 +163,15 @@ def sample_euler_dy(model, x, sigmas, extra_args=None, callback=None, disable=No
             x = x - eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
         denoised = model(x, sigma_hat * s_in, **extra_args)
         d = to_d(x, sigma_hat, denoised)	
-        if sigmas[i + 1] > 0:
-            if i == 1:
-                x = dy_sampling_step(x, model, dt, sigma_hat, **extra_args)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised})
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3) and i % 2 == 1:
+            sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
+            dt_1 = sigma_mid - sigmas[i]
+            dt_2 = sigmas[i + 1] - sigmas[i]
+            x_2 = x + d * dt_1
+            x_temp = dy_sampling_step(x_2, model, dt_2, sigma_mid, **extra_args)
+            x = x_temp - d * dt_1
         # Euler method
         x = x + d * dt	
     return x
@@ -185,13 +189,17 @@ def sample_euler_smea(model, x, sigmas, extra_args=None, callback=None, disable=
             x = x - eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
         denoised = model(x, sigma_hat * s_in, **extra_args)
         d = to_d(x, sigma_hat, denoised)
-        # Euler method
-        x = x + d * dt
-        if sigmas[i + 1] > 0:
-            if i == 0:
-                x = smea_dy_sampling_step(x, model, dt, sigma_hat, **extra_args)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised})
+        # Euler method
+        x = x + d * dt
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3) and i % 2 == 0:
+            sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
+            dt_1 = sigma_mid - sigmas[i]
+            dt_2 = sigmas[i + 1] - sigmas[i]
+            x_2 = x + d * dt_1
+            x_temp = smea_sampling_step(x_2, model, dt_2, sigma_mid, **extra_args)
+            x = x_temp - d * dt_1
     return x
 
 @torch.no_grad()
@@ -202,18 +210,26 @@ def sample_euler_smea_dy(model, x, sigmas, extra_args=None, callback=None, disab
         gamma = max(s_churn / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
         eps = k_diffusion.sampling.torch.randn_like(x) * s_noise
         sigma_hat = sigmas[i] * (gamma + 1)
-        dt = sigmas[i + 1] - sigma_hat
         if gamma > 0:
             x = x - eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
         denoised = model(x, sigma_hat * s_in, **extra_args)
         d = to_d(x, sigma_hat, denoised)
+        if callback is not None:
+            callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
+        dt = sigmas[i + 1] - sigma_hat
         # Euler method
         x = x + d * dt
-        if sigmas[i + 1] > 0 and i < 3:
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3):
+            sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
+            dt_1 = sigma_mid - sigmas[i]
+            dt_2 = sigmas[i + 1] - sigmas[i]
+            x_2 = x + d * dt_1
             if i % 2 == 0:
-                x = dy_sampling_step(x, model, dt, sigma_hat, **extra_args)
-            if i % 2 == 1:
-                x = smea_sampling_step(x, model, dt, sigma_hat, **extra_args)
+                x_temp = dy_sampling_step(x_2, model, dt_2, sigma_mid, **extra_args)
+            elif i % 2 == 1:
+                x_temp = smea_sampling_step(x_2, model, dt_2, sigma_mid, **extra_args)
+            x = x_temp - d * dt_1
+    return xl, dt, sigma_hat, **extra_args)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised})
     return x
