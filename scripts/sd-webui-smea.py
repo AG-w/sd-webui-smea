@@ -165,7 +165,7 @@ def sample_euler_dy(model, x, sigmas, extra_args=None, callback=None, disable=No
         d = to_d(x, sigma_hat, denoised)	
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised})
-        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3) and i % 2 == 1:
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3) and i % 2 == 0:
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigmas[i]
             dt_2 = sigmas[i + 1] - sigmas[i]
@@ -193,7 +193,7 @@ def sample_euler_smea(model, x, sigmas, extra_args=None, callback=None, disable=
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised})
         # Euler method
         x = x + d * dt
-        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3) and i % 2 == 0:
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3) and i % 2 == 1:
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigmas[i]
             dt_2 = sigmas[i + 1] - sigmas[i]
@@ -229,7 +229,6 @@ def sample_euler_smea_dy(model, x, sigmas, extra_args=None, callback=None, disab
             elif i % 2 == 1:
                 x_temp = smea_sampling_step(x_2, model, dt_2, sigma_mid, **extra_args)
             x = x_temp - d * dt_1
-    return xl, dt, sigma_hat, **extra_args)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised})
     return x
