@@ -43,7 +43,7 @@ class Smea(scripts.Script):
 
 def init():
     for i in sd_samplers.all_samplers:
-       if "Euler Dy" in i.name:
+       if "Euler Max" in i.name:
             return
 
     samplers_smea = [
