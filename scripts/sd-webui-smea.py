@@ -182,7 +182,7 @@ def sample_euler_dy(model, x, sigmas, extra_args=None, callback=None, disable=No
         d = to_d(x, sigma_hat, denoised)	
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised})
-        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3) and i % 2 == 0:
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.334 - len(sigmas) * 0.334 % 2 or i < 3) and i % 2 == 0:
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigmas[i]
             dt_2 = sigmas[i + 1] - sigmas[i]
@@ -207,7 +207,7 @@ def sample_euler_smea(model, x, sigmas, extra_args=None, callback=None, disable=
         d = to_d(x, sigma_hat, denoised)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
-        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.5 - len(sigmas) * 0.5 % 2 or i < 2):
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.334 - len(sigmas) * 0.334 % 2 or i < 2):
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
@@ -242,7 +242,7 @@ def sample_euler_smea_dyn(model, x, sigmas, extra_args=None, callback=None, disa
         d = to_d(x, sigma_hat, denoised)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
-        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.5 - len(sigmas) * 0.5 % 3 or i < 3):
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.334 - len(sigmas) * 0.334 % 3 or i < 3):
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
@@ -283,7 +283,7 @@ def sample_euler_smea_dy(model, x, sigmas, extra_args=None, callback=None, disab
         dt = sigmas[i + 1] - sigma_hat
         # Euler method
         x = x + d * dt
-        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.333 or i < 3):
+        if sigmas[i + 1] > 0 and (i < len(sigmas) * 0.334 - len(sigmas) * 0.334 % 2  or i < 3):
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigmas[i]
             #dt_2 = sigmas[i + 1] - sigmas[i]
