@@ -248,7 +248,7 @@ def sample_euler_smea_dyn(model, x, sigmas, extra_args=None, callback=None, disa
             dt_2 = sigmas[i + 1] - sigma_hat
             x_2 = x + d * dt_1
 	    #scale = (sigma_mid / sigmas[0]) * 0.25
-            scale = ((len(sigmas) - i) / len(sigmas)) ** 2 * 0.25
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2 * 0.2
             #scale = scale.item()
             if i % 4 == 0:
                 denoised_2 = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale, **extra_args)
