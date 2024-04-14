@@ -1,5 +1,5 @@
 # sd-webui-smea
-smea sampler for a1111 webui (single file only)
+smea sampler for a1111 webui (in single file only)
 
 originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)
 
@@ -14,4 +14,4 @@ originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dy
 *Euler Dy koishi-star: og Euler Dy made by koishi-star    
 *Euler Smea Dy koishi-star: og Euler Smea Dy made by koishi-star    
     
-The reason of many experiments is due to og sampler tends to blurred the background or overfry image, so I checked DPM2 sampler and experiment if it's worth to tweak it
+The reason of many experiments is due to og sampler tends to blurred the background or overfry the image, so I checked DPM2 sampler and experiment if it's worth to tweak it
