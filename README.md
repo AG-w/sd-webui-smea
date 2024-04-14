@@ -1,9 +1,9 @@
 # sd-webui-smea
 smea sampler for a1111 webui (single file only)
 
-originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [licyk](https://github.com/licyk/advanced_euler_sampler_extension)
+originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)
 
-*Euler Max: from licyk's repo    
+*Euler Max: from ananosleep's repo    
 *Euler Dy: Euler Dy but with DPM2 tweak, toggle on/off every step (stopped at 1/3 total steps)    
 *Euler Smea: Euler Smea but with DPM2 tweak, toggle on/off every step (stopped at 1/3 total steps)    
 *Euler Smea dyn: Euler Smea but with DPM2 tweak, loopping scale down > up > normal >... every step (stopped at 1/3 total steps)    
