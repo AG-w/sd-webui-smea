@@ -18,3 +18,9 @@ all sampler above stopped smea / dy sampling at 1/3 total steps
 *Euler Smea Dy koishi-star: og Euler Smea Dy made by koishi-star     
        
 The reason of many experiments is due to og sampler tends to blurred the background or overfry the image, so I checked DPM2 sampler and experiment if it's worth to tweak it
+
+Explanation:
+What Smea sampling do is scaling latent image > denoise > scale it back to original size
+What dy sampling do is shrinking latent image to 1/2 size > denoise > extend it to original size
+since what they did is bascially just scaling latent image, I use smea sampling only.
+What all these samplers do is bascailly trying to combine different scaled latent image to generate image with better detail
