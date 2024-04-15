@@ -54,7 +54,11 @@ def init():
         ('Euler Smea dyn a', sample_euler_smea_dyn_a, ['k_euler'], {}),
         ('Euler Smea dyn b', sample_euler_smea_dyn_b, ['k_euler'], {}),
         ('Euler Smea dyn c', sample_euler_smea_dyn_b, ['k_euler'], {}),
-        ('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
+        ('Euler Smea ma', sample_euler_smea_multi_a, ['k_euler'], {}),
+        ('Euler Smea mb', sample_euler_smea_multi_b, ['k_euler'], {}),
+        ('Euler Smea mc', sample_euler_smea_multi_c, ['k_euler'], {}),
+        ('Euler Smea md', sample_euler_smea_multi_d, ['k_euler'], {}),
+	('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
         ('Euler Smea Dy koishi-star', sample_euler_smea_dy_og, ['k_euler'], {}),
     ]
 
@@ -72,7 +76,11 @@ def init():
         sample_euler_smea_dyn_a: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_dyn_b: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_dyn_c: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
-        sample_euler_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_multi_a: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_multi_b: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_multi_c: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_multi_d: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+	sample_euler_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
     }
     sd_samplers_kdiffusion.sampler_extra_params = {**sd_samplers_kdiffusion.sampler_extra_params, **sampler_exparams_smea}
@@ -360,6 +368,141 @@ def sample_euler_smea_dy(model, x, sigmas, extra_args=None, callback=None, disab
             elif i % 3 == 0:
                 x_temp = smea_sampling_step(x, model, dt_2, sigma_mid, **extra_args)
             x = x_temp - d * dt_1
+    return x
+
+@torch.no_grad()
+def sample_euler_smea_multi_d(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+    extra_args = {} if extra_args is None else extra_args
+    s_in = x.new_ones([x.shape[0]])
+    for i in trange(len(sigmas) - 1, disable=disable):
+        gamma = min(s_churn / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
+        eps = k_diffusion.sampling.torch.randn_like(x) * s_noise
+        sigma_hat = sigmas[i] * (gamma + 1)
+        if gamma > 0:
+            x = x + eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
+        denoised = model(x, sigma_hat * s_in, **extra_args)
+        d = to_d(x, sigma_hat, denoised)
+        if callback is not None:
+            callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.334 + 2 and i % 2 == 0:
+            sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
+            dt_1 = sigma_mid - sigma_hat
+            dt_2 = sigmas[i + 1] - sigma_hat
+            x_2 = x + d * dt_1
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
+            if i == 0:
+                denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.1, **extra_args) - x_2
+                denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
+                denoised_2 = (denoised_2a + denoised_2c) / 2 + x_2
+            elif i < len(sigmas) * 0.334:
+                denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.25, **extra_args) - x_2
+                denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.15, **extra_args) - x_2
+                denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
+                denoised_2 = (denoised_2a + denoised_2b + denoised_2c) / 3 + x_2
+            else:
+                denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.1, **extra_args) - x_2
+                denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
+                denoised_2 = (denoised_2b + denoised_2c) / 2 + x_2
+            d_2 = to_d(x_2, sigma_mid, denoised_2)
+            x = x + d_2 * dt_2
+        else:
+            dt = sigmas[i + 1] - sigma_hat
+            # Euler method
+            x = x + d * dt
+    return x
+
+@torch.no_grad()
+def sample_euler_smea_multi_b(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+    extra_args = {} if extra_args is None else extra_args
+    s_in = x.new_ones([x.shape[0]])
+    for i in trange(len(sigmas) - 1, disable=disable):
+        gamma = min(s_churn / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
+        eps = k_diffusion.sampling.torch.randn_like(x) * s_noise
+        sigma_hat = sigmas[i] * (gamma + 1)
+        if gamma > 0:
+            x = x + eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
+        denoised = model(x, sigma_hat * s_in, **extra_args)
+        d = to_d(x, sigma_hat, denoised)
+        if callback is not None:
+            callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.167:
+            sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
+            dt_1 = sigma_mid - sigma_hat
+            dt_2 = sigmas[i + 1] - sigma_hat
+            x_2 = x + d * dt_1
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
+            denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.25, **extra_args) - x_2
+            denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.15, **extra_args) - x_2
+            denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
+            denoised_2 = (denoised_2a + denoised_2b + denoised_2c) / 3 + x_2
+            d_2 = to_d(x_2, sigma_mid, denoised_2)
+            x = x + d_2 * dt_2
+        else:
+            dt = sigmas[i + 1] - sigma_hat
+            # Euler method
+            x = x + d * dt
+    return x
+	
+@torch.no_grad()
+def sample_euler_smea_multi_c(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+    extra_args = {} if extra_args is None else extra_args
+    s_in = x.new_ones([x.shape[0]])
+    for i in trange(len(sigmas) - 1, disable=disable):
+        gamma = min(s_churn / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
+        eps = k_diffusion.sampling.torch.randn_like(x) * s_noise
+        sigma_hat = sigmas[i] * (gamma + 1)
+        if gamma > 0:
+            x = x + eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
+        denoised = model(x, sigma_hat * s_in, **extra_args)
+        d = to_d(x, sigma_hat, denoised)
+        if callback is not None:
+            callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.167:
+            sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
+            dt_1 = sigma_mid - sigma_hat
+            dt_2 = sigmas[i + 1] - sigma_hat
+            x_2 = x + d * dt_1
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
+            denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.25, **extra_args) - x_2
+            denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
+            denoised_2 = (denoised_2a + denoised_2c) / 2 + x_2
+            d_2 = to_d(x_2, sigma_mid, denoised_2)
+            x = x + d_2 * dt_2
+        else:
+            dt = sigmas[i + 1] - sigma_hat
+            # Euler method
+            x = x + d * dt
+    return x
+
+@torch.no_grad()
+def sample_euler_smea_multi_a(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+    extra_args = {} if extra_args is None else extra_args
+    s_in = x.new_ones([x.shape[0]])
+    for i in trange(len(sigmas) - 1, disable=disable):
+        gamma = min(s_churn / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
+        eps = k_diffusion.sampling.torch.randn_like(x) * s_noise
+        sigma_hat = sigmas[i] * (gamma + 1)
+        if gamma > 0:
+            x = x + eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
+        denoised = model(x, sigma_hat * s_in, **extra_args)
+        d = to_d(x, sigma_hat, denoised)
+        if callback is not None:
+            callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.167:
+            sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
+            dt_1 = sigma_mid - sigma_hat
+            dt_2 = sigmas[i + 1] - sigma_hat
+            x_2 = x + d * dt_1
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
+            denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.15, **extra_args) - x_2
+            denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
+            denoised_2 = (denoised_2b + denoised_2c) / 2 + x_2
+            d_2 = to_d(x_2, sigma_mid, denoised_2)
+            x = x + d_2 * dt_2
+        else:
+            dt = sigmas[i + 1] - sigma_hat
+            # Euler method
+            x = x + d * dt
     return x
 
 ## og sampler
