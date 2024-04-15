@@ -11,10 +11,10 @@ originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dy
 *Euler Smea dyn a: Euler Smea with DPM2 tweak (less sigma), toggle on/off (scale up) every step every step    
 *Euler Smea dyn b: Euler Smea with DPM2 tweak (less sigma), loopping scale down > up > normal >... every step   
 *Euler Smea dyn c: Euler Smea with DPM2 tweak (less sigma), toggle on/off (scale down) every step every step   
-*Euler Smea ma: Euler Smea with DPM2 tweak (less sigma), combine scaled up latent image with normal one
-*Euler Smea mb: Euler Smea with DPM2 tweak (less sigma), combine scaled up and scaled down latent image with normal one
-*Euler Smea mc: Euler Smea with DPM2 tweak (less sigma), combine scaled down latent image with normal one
-*Euler Smea md: Euler Smea with DPM2 tweak (less sigma), start with Smea ma then Smea mb, ended with Smea md
+*Euler Smea ma: Euler Smea with DPM2 tweak (less sigma), combine scaled up latent image with normal one    
+*Euler Smea mb: Euler Smea with DPM2 tweak (less sigma), combine scaled up and scaled down latent image with normal one    
+*Euler Smea mc: Euler Smea with DPM2 tweak (less sigma), combine scaled down latent image with normal one    
+*Euler Smea md: Euler Smea with DPM2 tweak (less sigma), start with Smea ma then Smea mb, ended with Smea md    
 all sampler above stopped smea / dy sampling at 1/3 total steps    
     
 *Euler Max: from ananosleep's repo     
