@@ -53,7 +53,7 @@ def init():
         ('Euler Smea Dy', sample_euler_smea_dy, ['k_euler'], {}),		
         ('Euler Smea dyn a', sample_euler_smea_dyn_a, ['k_euler'], {}),
         ('Euler Smea dyn b', sample_euler_smea_dyn_b, ['k_euler'], {}),
-        ('Euler Smea dyn c', sample_euler_smea_dyn_b, ['k_euler'], {}),
+        ('Euler Smea dyn c', sample_euler_smea_dyn_c, ['k_euler'], {}),
         ('Euler Smea ma', sample_euler_smea_multi_a, ['k_euler'], {}),
         ('Euler Smea mb', sample_euler_smea_multi_b, ['k_euler'], {}),
         ('Euler Smea mc', sample_euler_smea_multi_c, ['k_euler'], {}),
