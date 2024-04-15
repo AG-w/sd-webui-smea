@@ -391,7 +391,7 @@ def sample_euler_smea_multi_d(model, x, sigmas, extra_args=None, callback=None, 
             x_2 = x + d * dt_1
             scale = ((len(sigmas) - i) / len(sigmas)) ** 2
             if i == 0:
-                denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.1, **extra_args) - x_2
+                denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.25, **extra_args) - x_2
                 denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
                 denoised_2 = (denoised_2a + denoised_2c) / 2 + x_2
             elif i < len(sigmas) * 0.334:
@@ -400,7 +400,7 @@ def sample_euler_smea_multi_d(model, x, sigmas, extra_args=None, callback=None, 
                 denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
                 denoised_2 = (denoised_2a + denoised_2b + denoised_2c) / 3 + x_2
             else:
-                denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.1, **extra_args) - x_2
+                denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.15, **extra_args) - x_2
                 denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
                 denoised_2 = (denoised_2b + denoised_2c) / 2 + x_2
             d_2 = to_d(x_2, sigma_mid, denoised_2)
