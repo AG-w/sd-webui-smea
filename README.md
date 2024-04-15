@@ -8,8 +8,9 @@ originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dy
 *Euler Dy: Euler Dy with DPM2 tweak, toggle on/off every step    
 *Euler Smea: Euler Smea with DPM2 tweak, toggle on/off every step    
 *Euler Smea Dy: Euler Smea Dy with DPM2 tweak, loopping scale up > folded to 1/2 size > normal >... every step     
-*Euler Smea dyn a: Euler Smea with DPM2 tweak (less sigma), toggle on/off every step every step    
-*Euler Smea dyn b: Euler Smea with DPM2 tweak (less sigma), loopping scale down > up > normal >... every step    
+*Euler Smea dyn a: Euler Smea with DPM2 tweak (less sigma), toggle on/off (scale up) every step every step    
+*Euler Smea dyn b: Euler Smea with DPM2 tweak (less sigma), loopping scale down > up > normal >... every step   
+*Euler Smea dyn c: Euler Smea with DPM2 tweak (less sigma), toggle on/off (scale down) every step every step   
 all sampler above stopped smea / dy sampling at 1/3 total steps    
     
 *Euler Max: from ananosleep's repo     
