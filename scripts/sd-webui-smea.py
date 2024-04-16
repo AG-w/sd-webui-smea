@@ -148,10 +148,11 @@ def smea_sampling_step(x, model, dt, sigma_hat, **extra_args):
     return x
 
 @torch.no_grad()
-def smea_sampling_step_denoised(x, model, sigma_hat, scale=1.25, **extra_args):
+def smea_sampling_step_denoised(x, model, sigma_hat, scale=1.25, smooth=False, **extra_args):
     m, n = x.shape[2], x.shape[3]
-    x = torch.nn.functional.interpolate(input=x, scale_factor=(scale, scale), mode='nearest-exact')
-    with _Rescaler(model, x, 'nearest-exact', **extra_args) as rescaler:
+    filter = 'nearest-exact' if not smooth else 'bilinear'
+    x = torch.nn.functional.interpolate(input=x, scale_factor=(scale, scale), mode=filter)
+    with _Rescaler(model, x, filter, **extra_args) as rescaler:
         denoised = model(x, sigma_hat * x.new_ones([x.shape[0]]), **rescaler.extra_args)
     x = denoised
     x = torch.nn.functional.interpolate(input=x, size=(m,n), mode='nearest-exact')
@@ -400,7 +401,7 @@ def sample_euler_smea_multi_d(model, x, sigmas, extra_args=None, callback=None, 
                 denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
                 denoised_2 = (denoised_2a + denoised_2b + denoised_2c) / 3 + x_2
             else:
-                denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.15, **extra_args) - x_2
+                denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.15, True, **extra_args) - x_2
                 denoised_2c = model(x_2, sigma_mid * s_in, **extra_args) - x_2
                 denoised_2 = (denoised_2b + denoised_2c) / 2 + x_2
             d_2 = to_d(x_2, sigma_mid, denoised_2)
