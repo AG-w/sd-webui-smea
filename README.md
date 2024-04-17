@@ -15,13 +15,11 @@ originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dy
 *Euler Smea mb: Euler Smea with DPM2 tweak (less sigma), combine scaled up and scaled down latent image with normal one    
 *Euler Smea mc: Euler Smea with DPM2 tweak (less sigma), combine scaled down latent image with normal one    
 *Euler Smea md: Euler Smea with DPM2 tweak (less sigma), start with Smea mc then toggle Smea mb on/off every step, ended with Smea ma    
-all sampler above stopped smea / dy sampling at 1/3 total steps    
-
 *Euler Smea mas: Euler Smea ma tweaked    
 *Euler Smea mbs: Euler Smea mb tweaked    
 *Euler Smea mcs: Euler Smea mc tweaked    
-*Euler Smea mds: Euler Smea md tweaked    
-all sampler above stopped smea sampling at 1/5 total steps     
+*Euler Smea mds: Euler Smea md tweaked     
+all sampler above stopped smea / dy sampling at 1/3 total steps    
     
 *Euler Max: from ananosleep's repo     
 *Euler Dy koishi-star: og Euler Dy made by koishi-star        
