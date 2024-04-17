@@ -529,7 +529,7 @@ def sample_euler_smea_multi_ds(model, x, sigmas, extra_args=None, callback=None,
         d = to_d(x, sigma_hat, denoised)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
-        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.2 + 1:# and i % 2 == 0:
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.3 + 1:# and i % 2 == 0:
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
@@ -537,7 +537,7 @@ def sample_euler_smea_multi_ds(model, x, sigmas, extra_args=None, callback=None,
             scale = ((len(sigmas) - i) / len(sigmas)) ** 2
             if i == 0:
                 denoised_2 = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.15, **extra_args)
-            elif i < len(sigmas) * 0.2:
+            elif i < len(sigmas) * 0.3:
                 denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.25, **extra_args)
                 denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.15, **extra_args)
                 denoised_2 = (denoised_2a + denoised_2b) / 2
@@ -567,7 +567,7 @@ def sample_euler_smea_multi_bs(model, x, sigmas, extra_args=None, callback=None,
         d = to_d(x, sigma_hat, denoised)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
-        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.2:
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.3:
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
@@ -598,7 +598,7 @@ def sample_euler_smea_multi_cs(model, x, sigmas, extra_args=None, callback=None,
         d = to_d(x, sigma_hat, denoised)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
-        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.2:
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.3:
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
@@ -627,7 +627,7 @@ def sample_euler_smea_multi_as(model, x, sigmas, extra_args=None, callback=None,
         d = to_d(x, sigma_hat, denoised)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
-        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.2:
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.3:
             sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
