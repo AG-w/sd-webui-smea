@@ -542,7 +542,8 @@ def sample_euler_smea_multi_ds(model, x, sigmas, extra_args=None, callback=None,
             elif i < len(sigmas) * 0.167:
                 denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 - scale * 0.25, **extra_args)
                 denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.15, **extra_args)
-                denoised_2 = denoised_2a * 0.35 + denoised_2b * 0.65
+                denoised_2c = denoised #model(x_2, sigma_mid * s_in, **extra_args)
+                denoised_2 = denoised_2a * 0.35 + denoised_2b * 0.63 + denoised_2c * 0.02
             else:
                 denoised_2b = smea_sampling_step_denoised(x_2, model, sigma_mid, 1 + scale * 0.03, True, **extra_args)
                 denoised_2c = model(x_2, sigma_mid * s_in, **extra_args)
