@@ -5,7 +5,8 @@ originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dy
 
 ![sample](https://github.com/AG-w/sd-webui-smea/blob/main/sample.jpg?raw=true)
    
-sampler has nothing to do with NAI's sampler, I'm just suck at naming them
+These sampler has nothing to do with NAI's sampler, I'm just suck at naming them    
+
 *Euler Dy: Euler Dy with DPM2 tweak, toggle on/off every step    
 *Euler Smea: Euler Smea with DPM2 tweak, toggle on/off every step    
 *Euler Smea Dy: Euler Smea Dy with DPM2 tweak, loopping scale up > folded to 1/2 size > normal >... every step     
