@@ -534,7 +534,7 @@ def sample_euler_smea_multi_ds(model, x, sigmas, extra_args=None, callback=None,
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
             x_2 = x + d * dt_1
-            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2.5
             if i == 0:
                 sa = 1 - scale * 0.15
                 sb = 1 + scale * 0.09	
