@@ -616,7 +616,7 @@ def sample_euler_smea_multi_cs(model, x, sigmas, extra_args=None, callback=None,
             scale = ((len(sigmas) - i) / len(sigmas)) ** 2
             sa = 1 - scale * 0.25
             denoised_2 = smea_sampling_step_denoised(x_2, model, sigma_mid, sa, **extra_args)
-            d_2 = to_d(x_2, sigma_mid, denoised_2 * (sa ** 2) * 1.26)
+            d_2 = to_d(x_2, sigma_mid, denoised_2 * (sa ** 2) * 1.25)
             x = x + d_2 * dt_2
         else:
             dt = sigmas[i + 1] - sigma_hat
@@ -646,7 +646,7 @@ def sample_euler_smea_multi_as(model, x, sigmas, extra_args=None, callback=None,
             scale = ((len(sigmas) - i) / len(sigmas)) ** 2
             sa = 1 + scale * 0.15
             denoised_2 = smea_sampling_step_denoised(x_2, model, sigma_mid, sa, **extra_args)
-            d_2 = to_d(x_2, sigma_mid, denoised_2 * (sa ** 2) * 0.74)
+            d_2 = to_d(x_2, sigma_mid, denoised_2 * (sa ** 2) * 0.75)
             x = x + d_2 * dt_2
         else:
             dt = sigmas[i + 1] - sigma_hat
