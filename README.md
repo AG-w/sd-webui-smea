@@ -1,11 +1,10 @@
 # sd-webui-smea
-smea sampler for a1111 webui (in single file only)
-
-originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)
-
-![sample](https://github.com/AG-w/sd-webui-smea/blob/main/sample.jpg?raw=true)
-   
+smea sampler for a1111 webui    
 These sampler has nothing to do with NAI's sampler, I'm just suck at naming them    
+originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)
+    
+    
+![sample](https://github.com/AG-w/sd-webui-smea/blob/main/sample.jpg?raw=true)
 
 *Euler Dy: Euler Dy with DPM2 tweak, toggle on/off every step    
 *Euler Smea: Euler Smea with DPM2 tweak, toggle on/off every step    
