@@ -1,5 +1,5 @@
 # sd-webui-smea
-smea sampler for a1111 webui    
+smea sampler experiments for a1111 webui    
 These sampler has nothing to do with NAI's sampler, I'm just suck at naming them    
 originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)
     
@@ -26,6 +26,8 @@ all sampler above stopped smea / dy sampling at 1/3 total steps
 *Euler Smea mds: Euler Smea md tweaked     
 *Euler Smea mbs2: Euler Smea mbs with tweaked sigma     
 *Euler Smea mds2: Euler Smea mds with tweaked sigma     
+*Euler Smea mbs2 s: Euler Smea mbs2 with smoothed latent in process        
+*Euler Smea mds2 s: Euler Smea mds2 with smoothed latent in process     
 all sampler above stopped smea sampling at 1/6 total steps    
     
 *Euler Max: from ananosleep's repo     
