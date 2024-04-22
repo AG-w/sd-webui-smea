@@ -538,8 +538,7 @@ def sample_euler_smea_multi_ds(model, x, sigmas, extra_args=None, callback=None,
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
             x_2 = x + d * dt_1
-            scale = (sigmas[i] / sigmas[0]) ** 2
-            scale = scale.item()
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
             if i == 0:
                 sa = 1 - scale * 0.15
                 sb = 1 + scale * 0.09	
@@ -640,8 +639,7 @@ def sample_euler_smea_multi_bs(model, x, sigmas, extra_args=None, callback=None,
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
             x_2 = x + d * dt_1
-            scale = (sigmas[i] / sigmas[0]) ** 2
-            scale = scale.item()
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
             sa = 1 - scale * 0.25
             sb = 1 + scale * 0.15
             denoised_2a = smea_sampling_step_denoised(x_2, model, sigma_mid, sa, **extra_args) 
@@ -710,8 +708,7 @@ def sample_euler_smea_multi_cs(model, x, sigmas, extra_args=None, callback=None,
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
             x_2 = x + d * dt_1
-            scale = (sigmas[i] / sigmas[0]) ** 2
-            scale = scale.item()
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
             sa = 1 - scale * 0.25
             denoised_2 = smea_sampling_step_denoised(x_2, model, sigma_mid, sa, **extra_args)
             d_2 = to_d(x_2, sigma_mid, denoised_2 * (sa ** 2) * 1.25)
@@ -741,8 +738,7 @@ def sample_euler_smea_multi_as(model, x, sigmas, extra_args=None, callback=None,
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
             x_2 = x + d * dt_1
-            scale = (sigmas[i] / sigmas[0]) ** 2
-            scale = scale.item()
+            scale = ((len(sigmas) - i) / len(sigmas)) ** 2
             sa = 1 + scale * 0.15
             denoised_2 = smea_sampling_step_denoised(x_2, model, sigma_mid, sa, **extra_args)
             d_2 = to_d(x_2, sigma_mid, denoised_2 * (sa ** 2) * 0.75)
