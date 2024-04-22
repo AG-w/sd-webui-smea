@@ -6,6 +6,8 @@ originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dy
     
 ![sample](https://github.com/AG-w/sd-webui-smea/blob/main/sample.jpg?raw=true)
 
+RECOMMEND: Use Smea mbs2 or Smea mds2, They actually add details without messing up the image too much    
+
 *Euler Dy: Euler Dy with DPM2 tweak, toggle on/off every step    
 *Euler Smea: Euler Smea with DPM2 tweak, toggle on/off every step    
 *Euler Smea Dy: Euler Smea Dy with DPM2 tweak, loopping scale up > folded to 1/2 size > normal >... every step     
