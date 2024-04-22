@@ -64,6 +64,8 @@ def init():
         ('Euler Smea mds', sample_euler_smea_multi_ds, ['k_euler'], {}),
         ('Euler Smea mbs2', sample_euler_smea_multi_bs2, ['k_euler'], {}),
         ('Euler Smea mds2', sample_euler_smea_multi_ds2, ['k_euler'], {}),
+        ('Euler Smea mbs2 s', sample_euler_smea_multi_bs2_s, ['k_euler'], {}),
+        ('Euler Smea mds2 s', sample_euler_smea_multi_ds2_s, ['k_euler'], {}),
 	('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
         ('Euler Smea Dy koishi-star', sample_euler_smea_dy_og, ['k_euler'], {}),
     ]
@@ -90,10 +92,12 @@ def init():
         sample_euler_smea_multi_bs: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_multi_cs: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_multi_ds: ['s_churn', 's_tmin', 's_tmax', 's_noise'],            
-	sample_euler_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
-        sample_euler_smea_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_multi_bs2: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_multi_ds2: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_multi_bs2_s: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_multi_ds2_s: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
     }
     sd_samplers_kdiffusion.sampler_extra_params = {**sd_samplers_kdiffusion.sampler_extra_params, **sampler_exparams_smea}
 	
@@ -566,7 +570,12 @@ def sample_euler_smea_multi_ds(model, x, sigmas, extra_args=None, callback=None,
     return x	
 
 @torch.no_grad()
-def sample_euler_smea_multi_ds2(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+def sample_euler_smea_multi_ds2_s(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+    sample = sample_euler_smea_multi_ds2(model, x, sigmas, extra_args, callback, disable, s_churn, s_tmin, s_tmax, s_noise, smooth=True)
+    return sample
+
+@torch.no_grad()
+def sample_euler_smea_multi_ds2(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1., smooth=False):
     extra_args = {} if extra_args is None else extra_args
     s_in = x.new_ones([x.shape[0]])
     for i in trange(len(sigmas) - 1, disable=disable):
@@ -591,28 +600,28 @@ def sample_euler_smea_multi_ds2(model, x, sigmas, extra_args=None, callback=None
                 sb = 1 + scale * 0.09	
                 sigA = sigma_mid / (sa ** 2)
                 sigB = sigma_mid / (sb ** 2)
-                denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, **extra_args)
-                denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, **extra_args)
+                denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, smooth, **extra_args)
+                denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, smooth, **extra_args)
                 denoised_2 = (denoised_2a * (sa ** 2) * 0.5 * sb + denoised_2b * (sb ** 2) * 0.5 * sa) #/ (0.97**2) # 1 - (sa * sb ) / 2 + 1
-                d_2 = to_d(x_2, sigA * 0.5 * sb ** 2 + sigB * 0.5 * sa ** 2, denoised_2)
+                d_2 = to_d(x_2, sigA * 0.5 + sigB * 0.5, denoised_2)
             elif i < len(sigmas) * 0.167:
                 sa = 1 - scale * 0.25
                 sb = 1 + scale * 0.15
                 sigA = sigma_mid / (sa ** 2)
                 sigB = sigma_mid / (sb ** 2)
-                denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, **extra_args)
-                denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, **extra_args)
+                denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, smooth, **extra_args)
+                denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, smooth, **extra_args)
                 denoised_2 = (denoised_2a * (sa ** 2) * 0.5 * sb + denoised_2b * (sb ** 2) * 0.5 * sa) #/ (0.95**2)
-                d_2 = to_d(x_2, sigA * 0.5 * sb ** 2 + sigB * 0.5 * sa ** 2, denoised_2)
+                d_2 = to_d(x_2, sigA * 0.5 + sigB * 0.5, denoised_2)
             else:
                 sb = 1 + scale * 0.06
                 sc = 1 - scale * 0.1
                 sigB = sigma_mid / (sb ** 2)
                 sigC = sigma_mid / (sc ** 2)
-                denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, True, **extra_args)
-                denoised_2c = smea_sampling_step_denoised(x_2, model, sigC, sc, **extra_args)
+                denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, smooth, **extra_args)
+                denoised_2c = smea_sampling_step_denoised(x_2, model, sigC, sc, smooth, **extra_args)
                 denoised_2 = (denoised_2b * (sb ** 2) * 0.5 * sc + denoised_2c * (sc ** 2) * 0.5 * sb) #/ (0.98**2)
-                d_2 = to_d(x_2, sigB * 0.5 * sc ** 2 + sigC * 0.5 * sb ** 2, denoised_2)
+                d_2 = to_d(x_2, sigB * 0.5 + sigC * 0.5, denoised_2)
             x = x + d_2 * dt_2
         else:
             dt = sigmas[i + 1] - sigma_hat
@@ -654,7 +663,12 @@ def sample_euler_smea_multi_bs(model, x, sigmas, extra_args=None, callback=None,
     return x
 
 @torch.no_grad()
-def sample_euler_smea_multi_bs2(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+def sample_euler_smea_multi_bs2_s(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+    sample = sample_euler_smea_multi_bs2(model, x, sigmas, extra_args, callback, disable, s_churn, s_tmin, s_tmax, s_noise, smooth=True)
+    return sample
+
+@torch.no_grad()
+def sample_euler_smea_multi_bs2(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1., smooth=False):
     extra_args = {} if extra_args is None else extra_args
     s_in = x.new_ones([x.shape[0]])
     for i in trange(len(sigmas) - 1, disable=disable):
@@ -678,10 +692,10 @@ def sample_euler_smea_multi_bs2(model, x, sigmas, extra_args=None, callback=None
             sb = 1 + scale * 0.15
             sigA = sigma_mid / (sa ** 2)
             sigB = sigma_mid / (sb ** 2)
-            denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, **extra_args)
-            denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, **extra_args)
-            denoised_2 = (denoised_2a * (sa ** 2) * offH + denoised_2b * (sb ** 2) * offL)
-            d_2 = to_d(x_2, sigma_mid, denoised_2)
+            denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, smooth, **extra_args)
+            denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, smooth, **extra_args)
+            denoised_2 = (denoised_2a * (sa ** 2) * 0.5 * sb + denoised_2b * (sb ** 2) * 0.5 * sa)
+            d_2 = to_d(x_2, sigA * 0.5 + sigB * 0.5, denoised_2)
             x = x + d_2 * dt_2
         else:
             dt = sigmas[i + 1] - sigma_hat
