@@ -22,6 +22,8 @@ all sampler above stopped smea / dy sampling at 1/3 total steps
 *Euler Smea mbs: Euler Smea mb tweaked    
 *Euler Smea mcs: Euler Smea mc tweaked    
 *Euler Smea mds: Euler Smea md tweaked     
+*Euler Smea mbs2: Euler Smea mbs with tweaked sigma 
+*Euler Smea mds2: Euler Smea mds with tweaked sigma  
 all sampler above stopped smea sampling at 1/6 total steps    
     
 *Euler Max: from ananosleep's repo     
