@@ -681,7 +681,7 @@ def sample_euler_smea_multi_bs2(model, x, sigmas, extra_args=None, callback=None
             denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, **extra_args)
             denoised_2b = smea_sampling_step_denoised(x_2, model, sigB, sb, **extra_args)
             denoised_2 = (denoised_2a * (sa ** 2) * offH + denoised_2b * (sb ** 2) * offL)
-            d_2 = to_d(x_2, sigA * 0.5 * sb ** 2 + sigB * 0.5 * sa ** 2, denoised_2)
+            d_2 = to_d(x_2, sigma_mid, denoised_2)
             x = x + d_2 * dt_2
         else:
             dt = sigmas[i + 1] - sigma_hat
