@@ -12,9 +12,9 @@ TCD sampler from [dfl](https://github.com/dfl/comfyui-tcd-scheduler)
 
 Also check [Dynamic Thresholding](https://github.com/mcmonkeyprojects/sd-dynamic-thresholding), you can add more details    
 
-Euler Dy: Euler Dy with DPM2 tweak, toggle on/off every step    
-Euler Smea: Euler Smea with DPM2 tweak, toggle on/off every step    
-Euler Smea Dy: Euler Smea Dy with DPM2 tweak, loopping scale up > folded to 1/2 size > normal >... every step     
+Euler Dy: og Euler Dy with DPM2 tweak, toggle on/off every step    
+Euler Smea: og Euler Smea Dy with DPM2 tweak, use smea sampling only, toggle on/off every step    
+Euler Smea Dy: og Euler Smea Dy with DPM2 tweak, loopping scale up > folded to 1/2 size > normal >... every step     
 Euler Smea dyn a: Euler Smea with DPM2 tweak (less sigma), toggle on/off (scale up) every step every step    
 Euler Smea dyn b: Euler Smea with DPM2 tweak (less sigma), loopping scale down > up > normal >... every step   
 Euler Smea dyn c: Euler Smea with DPM2 tweak (less sigma), toggle on/off (scale down) every step every step   
