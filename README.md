@@ -1,8 +1,9 @@
 # sd-webui-smea
 smea sampler experiments for a1111 webui    
-These sampler has nothing to do with NAI's sampler, I'm just suck at naming them.     
-(smea here stands for "Shovel More Extra Artifacts")     
-originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)
+These sampler has nothing to do with NAI's sampler, I'm just suck at naming them.      
+(smea here stands for "Shovel More Extra Artifacts")      
+originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)      
+TCD sampler from [dfl](https://github.com/dfl/comfyui-tcd-scheduler)       
     
     
 ![sample](https://github.com/AG-w/sd-webui-smea/blob/main/sample.jpg?raw=true)
@@ -24,8 +25,8 @@ all sampler above stopped smea / dy sampling at 1/3 total steps
 *Euler Smea mas: Euler Smea ma tweaked    
 *Euler Smea mbs: Euler Smea mb tweaked    
 *Euler Smea mcs: Euler Smea mc tweaked    
-*Euler Smea mds: Euler Smea md tweaked     
-*Euler Smea mbs2: Euler Smea mbs with tweaked sigma     
+*Euler Smea mds: Euler Smea md tweaked      
+*Euler Smea mbs2: Euler Smea mds with tweaked sigma          
 *Euler Smea mds2: Euler Smea mds with tweaked sigma     
 *Euler Smea mbs2 s: Euler Smea mbs2 with smoothed latent in process        
 *Euler Smea mds2 s: Euler Smea mds2 with smoothed latent in process     
@@ -34,7 +35,7 @@ all sampler above stopped smea sampling at 1/6 total steps
 *Euler Max: from ananosleep's repo     
 *Euler Dy koishi-star: og Euler Dy made by koishi-star        
 *Euler Smea Dy koishi-star: og Euler Smea Dy made by koishi-star     
-       
+*TCD and TCD Euler a: from dfl's repo      
 The reason of many experiments is due to og sampler tends to blurred the background or overfry the image, so I checked DPM2 sampler and experiment if it's worth to tweak it
     
 Explanation:    
