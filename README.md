@@ -1,6 +1,6 @@
 # sd-webui-smea
 smea sampler experiments for a1111 webui    
-These sampler has nothing to do with NAI's sampler, I'm just suck at naming them.      
+These sampler has nothing to do with NAI's sampler or Euler sampler, I'm just suck at naming them.      
 (smea here stands for "Shovel More Extra Artifacts")      
 originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)      
 TCD sampler from [dfl](https://github.com/dfl/comfyui-tcd-scheduler)       
