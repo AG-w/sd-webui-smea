@@ -8,7 +8,7 @@ TCD sampler from [dfl](https://github.com/dfl/comfyui-tcd-scheduler)
 ![sample2](https://github.com/AG-w/sd-webui-smea/blob/main/sample2.jpg?raw=true)    
 ![sample](https://github.com/AG-w/sd-webui-smea/blob/main/sample.jpg?raw=true)
 
-RECOMMEND: Use Smea mbs2 or Smea mds2   
+**RECOMMEND: Use Smea mbs2 or Smea mds2, they add details (or artifacts) more reliably**    
 
 *Euler Dy: Euler Dy with DPM2 tweak, toggle on/off every step    
 *Euler Smea: Euler Smea with DPM2 tweak, toggle on/off every step    
