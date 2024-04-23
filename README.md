@@ -5,7 +5,7 @@ These sampler has nothing to do with NAI's sampler or Euler sampler, I'm just su
 originally created by [Koishi-Star](https://github.com/Koishi-Star/Euler-Smea-Dyn-Sampler) and [ananosleep](https://github.com/ananosleep/advanced_euler_sampler_extension)      
 TCD sampler from [dfl](https://github.com/dfl/comfyui-tcd-scheduler)       
     
-    
+![sample2](https://github.com/AG-w/sd-webui-smea/blob/main/sample2.jpg?raw=true)    
 ![sample](https://github.com/AG-w/sd-webui-smea/blob/main/sample.jpg?raw=true)
 
 RECOMMEND: Use Smea mbs2 or Smea mds2   
