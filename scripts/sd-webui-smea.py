@@ -115,6 +115,9 @@ def init():
 
     return
 
+def default_noise_sampler(x):
+    return lambda sigma, sigma_next: k_diffusion.sampling.torch.randn_like(x)
+
 @torch.no_grad()
 def dy_sampling_step(x, model, dt, sigma_hat, **extra_args):
     original_shape = x.shape
