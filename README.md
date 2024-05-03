@@ -40,7 +40,8 @@ Euler Smea Dy koishi-star: og Euler Smea Dy made by koishi-star
 TCD and TCD Euler a: from dfl's repo        
        
 ### Explanation:    
-The reason of many experiments is due to og sampler tends to blurred the background or overfry the image, so I checked DPM2 sampler and experiment if it's worth to tweak it    
+The reason of many experiments is due to og sampler tends to blurred the background or overfry the image,    
+so I checked DPM2 sampler and experiment if it's worth to tweak it    
 What Smea sampling do is scaling latent image > denoise > scale it back to original size    
 What dy sampling do is shrinking latent image to 1/2 size > denoise > extend it to original size    
 since what they did is bascially just scaling latent image, I use smea sampling only    
