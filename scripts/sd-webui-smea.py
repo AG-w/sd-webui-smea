@@ -66,7 +66,7 @@ def init():
         ('Euler Smea mds2', sample_euler_smea_multi_ds2, ['k_euler'], {}),
         ('Euler Smea mbs2 s', sample_euler_smea_multi_bs2_s, ['k_euler'], {}),
         ('Euler Smea mds2 s', sample_euler_smea_multi_ds2_s, ['k_euler'], {}),
-	('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
+        ('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
         ('Euler Smea Dy koishi-star', sample_euler_smea_dy_og, ['k_euler'], {}),
         ('TCD Euler a', sample_tcd_euler_a, ['tcd_euler_a'], {}),
         ('TCD', sample_tcd, ['tcd'], {}),
