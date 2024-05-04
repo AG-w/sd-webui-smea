@@ -611,8 +611,8 @@ def sample_euler_smea_multi_ds2(model, x, sigmas, extra_args=None, callback=None
                 denoised_2 = (denoised_2a * (sa ** 2) * 0.5 * sb + denoised_2b * (sb ** 2) * 0.5 * sa) #/ (0.97**2) # 1 - (sa * sb ) / 2 + 1
                 d_2 = to_d(x_2, sigA * 0.5 * sb + sigB * 0.5 * sa, denoised_2)
             elif i < len(sigmas) * 0.167:
-                sa = 1 - scale * 0.23
-                sb = 1 + scale * 0.138
+                sa = 1 - scale * 0.25
+                sb = 1 + scale * 0.15
                 sigA = sigma_mid / (sa ** 2)
                 sigB = sigma_mid / (sb ** 2)
                 delta = sa * sb
