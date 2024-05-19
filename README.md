@@ -36,10 +36,10 @@ Euler Smea mds2 s: Euler Smea mds2 with smoothed latent in process
 all sampler above stopped smea sampling at 1/6 total steps    
     
 Euler Max: from ananosleep's repo    
-Euler Max2: Euler Max with adjusted cosine wave      
+Euler Max2 / Euler Max2b: Euler Max with adjusted cosine wave      
 Euler Dy koishi-star: og Euler Dy made by koishi-star        
 Euler Smea Dy koishi-star: og Euler Smea Dy made by koishi-star     
-TCD and TCD Euler a: from dfl's repo        
+TCD / TCD Euler a: from dfl's repo        
        
 ### Explanation:    
 The reason of many experiments is due to og sampler tends to blurred the background or overfry the image,    
