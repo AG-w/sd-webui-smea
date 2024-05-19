@@ -756,6 +756,7 @@ def sample_euler_smea_max(model, x, sigmas, extra_args=None, callback=None, disa
         gamma = min(s_churn / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
         eps = k_diffusion.sampling.torch.randn_like(x) * s_noise
         sigma_hat = sigmas[i] * (gamma + 1)
+        sa = math.cos(1.05 * i + 1)/(1.1 * i + 1.5) + 1
         if gamma > 0:
             x = x + eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
         denoised = model(x, sigma_hat * s_in, **extra_args)
@@ -767,7 +768,6 @@ def sample_euler_smea_max(model, x, sigmas, extra_args=None, callback=None, disa
             dt_1 = sigma_mid - sigma_hat
             dt_2 = sigmas[i + 1] - sigma_hat
             x_2 = x + d * dt_1
-            sa = math.cos(1.05 * i + 1)/(1.1 * i + 1.5) + 1
             sigA = sigma_mid / (sa ** 2)
             sigB = sigma_mid
             denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, smooth, **extra_args)
