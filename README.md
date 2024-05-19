@@ -32,6 +32,7 @@ Euler Smea mbs2: Euler Smea mds with tweaked sigma
 Euler Smea mds2: Euler Smea mds with tweaked sigma     
 Euler Smea mds2 max: Euler Smea mds2 with adjusted cosine wave      
 Euler Smea mbs2 s: Euler Smea mbs2 with smoothed latent in process        
+Euler Smea mds2 s max: Euler Smea mds2 s with adjusted cosine wave         
 Euler Smea mds2 s: Euler Smea mds2 with smoothed latent in process     
 all sampler above stopped smea sampling at 1/6 total steps    
     
