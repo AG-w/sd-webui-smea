@@ -709,11 +709,11 @@ def sample_euler_smea_multi_ds2_m(model, x, sigmas, extra_args=None, callback=No
                 denoised_2c = smea_sampling_step_denoised(x_2, model, sigC, sc, smooth, **extra_args)
                 denoised_2 = (denoised_2b * (sb ** 2) * 0.5 * sc ** 2+ denoised_2c * (sc ** 2) * 0.5 * sb ** 2) #/ (0.98**2)
                 d_2 = to_d(x_2, sigB * 0.5 * sc ** 2 + sigC * 0.5 * sb ** 2, denoised_2)
-            x = x + (math.cos(1.05 * i + 1)/(1.1 * i + 1.5) + 1) * d_2 * dt_2
+            x = x + (math.cos(1.05 * i + 1.1)/(1.25 * i + 1.5) + 1) * d_2 * dt_2
         else:
             dt = sigmas[i + 1] - sigma_hat
             # Euler method
-            x = x + (math.cos(1.05 * i + 1)/(1.1 * i + 1.5) + 1) * d * dt
+            x = x + (math.cos(1.05 * i + 1.1)/(1.25 * i + 1.5) + 1) * d * dt
     return x	
 
 @torch.no_grad()
