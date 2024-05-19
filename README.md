@@ -20,7 +20,9 @@ Euler Smea dyn b: Euler Smea with DPM2 tweak (less sigma), loopping scale down >
 Euler Smea dyn c: Euler Smea with DPM2 tweak (less sigma), toggle on/off (scale down) every step every step   
 Euler Smea md: Euler Smea with DPM2 tweak (less sigma), start with Smea mc then toggle Smea mb on/off every step, ended with Smea ma  
 all sampler above stopped smea / dy sampling at 1/3 total steps      
-     
+
+Euler Smea Max: Euler Smea with adjusted cosine wave scaling      
+Euler Smea Max s: Euler Smea Max with smoothed latent in process      
 Euler Smea ma: Euler Smea with DPM2 tweak (less sigma), combine scaled up latent image with normal one    
 Euler Smea mb: Euler Smea with DPM2 tweak (less sigma), combine scaled up and scaled down latent image with normal one    
 Euler Smea mc: Euler Smea with DPM2 tweak (less sigma), combine scaled down latent image with normal one          
