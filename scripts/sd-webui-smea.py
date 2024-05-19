@@ -52,7 +52,9 @@ def init():
         ('Euler Max2b', sample_euler_max2b, ['k_euler'], {}),
         ('Euler Dy', sample_euler_dy, ['k_euler'], {}),
         ('Euler Smea', sample_euler_smea, ['k_euler'], {}),
-        ('Euler Smea Dy', sample_euler_smea_dy, ['k_euler'], {}),		
+        ('Euler Smea Dy', sample_euler_smea_dy, ['k_euler'], {}),
+        ('Euler Smea Max', sample_euler_smea_max, ['k_euler'], {}),		
+        ('Euler Smea Max s', sample_euler_smea_max_s, ['k_euler'], {}),
         ('Euler Smea dyn a', sample_euler_smea_dyn_a, ['k_euler'], {}),
         ('Euler Smea dyn b', sample_euler_smea_dyn_b, ['k_euler'], {}),
         ('Euler Smea dyn c', sample_euler_smea_dyn_c, ['k_euler'], {}),
@@ -89,6 +91,8 @@ def init():
         sample_euler_dy: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_dy: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_max: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_max_s: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_dyn_a: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_dyn_b: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_dyn_c: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
@@ -743,6 +747,45 @@ def sample_euler_smea_multi_ds2_m(model, x, sigmas, extra_args=None, callback=No
             # Euler method
             x = x + (math.cos(1.05 * i + 1.1)/(1.25 * i + 1.5) + 1) * d * dt
     return x	
+
+@torch.no_grad()
+def sample_euler_smea_max(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1., smooth=False):
+    extra_args = {} if extra_args is None else extra_args
+    s_in = x.new_ones([x.shape[0]])
+    for i in trange(len(sigmas) - 1, disable=disable):
+        gamma = min(s_churn / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
+        eps = k_diffusion.sampling.torch.randn_like(x) * s_noise
+        sigma_hat = sigmas[i] * (gamma + 1)
+        if gamma > 0:
+            x = x + eps * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
+        denoised = model(x, sigma_hat * s_in, **extra_args)
+        d = to_d(x, sigma_hat, denoised)
+        if callback is not None:
+            callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
+        if sigmas[i + 1] > 0 and i < len(sigmas) * 0.167 + 1: # and i % 2 == 0:
+            sigma_mid = sigma_hat.log().lerp(sigmas[i + 1].log(), 0.5).exp()
+            dt_1 = sigma_mid - sigma_hat
+            dt_2 = sigmas[i + 1] - sigma_hat
+            x_2 = x + d * dt_1
+            sa = math.cos(1.05 * i + 1)/(1.1 * i + 1.5) + 1
+            sigA = sigma_mid / (sa ** 2)
+            sigB = sigma_mid
+            denoised_2a = smea_sampling_step_denoised(x_2, model, sigA, sa, smooth, **extra_args)
+            denoised_2b = model(x_2, sigma_mid * s_in, **extra_args)
+            denoised_2 = (denoised_2a * 0.5 * (sa ** 2) + denoised_2b * 0.5 / (sa ** 2))
+            d_2 = to_d(x_2, sigA * 0.5 * (sa ** 2) + sigB * 0.5 / (sa ** 2), denoised_2)
+            x = x + d_2 * dt_2
+        else:
+            dt = sigmas[i + 1] - sigma_hat
+            # Euler method
+            x = x + sa * d * dt
+    return x	
+
+
+@torch.no_grad()
+def sample_euler_smea_max_s(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+    sample = sample_euler_smea_max(model, x, sigmas, extra_args, callback, disable, s_churn, s_tmin, s_tmax, s_noise, smooth=True)
+    return sample
 
 @torch.no_grad()
 def sample_euler_smea_multi_bs(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
