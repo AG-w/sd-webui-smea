@@ -30,11 +30,13 @@ Euler Smea mcs: Euler Smea mc tweaked
 Euler Smea mds: Euler Smea md tweaked      
 Euler Smea mbs2: Euler Smea mds with tweaked sigma          
 Euler Smea mds2: Euler Smea mds with tweaked sigma     
+Euler Smea mds2 max: Euler Smea mds2 with adjusted cosine wave      
 Euler Smea mbs2 s: Euler Smea mbs2 with smoothed latent in process        
 Euler Smea mds2 s: Euler Smea mds2 with smoothed latent in process     
 all sampler above stopped smea sampling at 1/6 total steps    
     
-Euler Max: from ananosleep's repo     
+Euler Max: from ananosleep's repo    
+Euler Max2: Euler Max with adjusted cosine wave      
 Euler Dy koishi-star: og Euler Dy made by koishi-star        
 Euler Smea Dy koishi-star: og Euler Smea Dy made by koishi-star     
 TCD and TCD Euler a: from dfl's repo        
