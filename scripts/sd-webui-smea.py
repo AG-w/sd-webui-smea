@@ -67,6 +67,7 @@ def init():
         ('Euler Smea mbs2', sample_euler_smea_multi_bs2, ['k_euler'], {}),
         ('Euler Smea mds2', sample_euler_smea_multi_ds2, ['k_euler'], {}),
         ('Euler Smea mds2 max', sample_euler_smea_multi_ds2_m, ['k_euler'], {}),
+        ('Euler Smea mds2 s max', sample_euler_smea_multi_ds2_s_m, ['k_euler'], {}),
         ('Euler Smea mbs2 s', sample_euler_smea_multi_bs2_s, ['k_euler'], {}),
         ('Euler Smea mds2 s', sample_euler_smea_multi_ds2_s, ['k_euler'], {}),
         ('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
@@ -102,6 +103,7 @@ def init():
         sample_euler_smea_multi_bs2: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_multi_ds2: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_multi_ds2_m: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_smea_multi_ds2_s_m: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_multi_bs2_s: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_multi_ds2_s: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
@@ -621,6 +623,11 @@ def sample_euler_smea_multi_ds(model, x, sigmas, extra_args=None, callback=None,
 @torch.no_grad()
 def sample_euler_smea_multi_ds2_s(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
     sample = sample_euler_smea_multi_ds2(model, x, sigmas, extra_args, callback, disable, s_churn, s_tmin, s_tmax, s_noise, smooth=True)
+    return sample
+
+@torch.no_grad()
+def sample_euler_smea_multi_ds2_s_m(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1.):
+    sample = sample_euler_smea_multi_ds2_m(model, x, sigmas, extra_args, callback, disable, s_churn, s_tmin, s_tmax, s_noise, smooth=True)
     return sample
 
 @torch.no_grad()
