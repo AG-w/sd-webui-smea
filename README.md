@@ -39,6 +39,7 @@ Euler Smea mds2 s: Euler Smea mds2 with smoothed latent in process
 all sampler above stopped smea sampling at 1/6 total steps    
     
 Euler Max: from ananosleep's repo    
+Euler h max: Euler Max with adjusted cosine wave     
 Euler Max(x): Euler Max with adjusted cosine wave      
 Euler Dy koishi-star: og Euler Dy made by koishi-star        
 Euler Smea Dy koishi-star: og Euler Smea Dy made by koishi-star     
