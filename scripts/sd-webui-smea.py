@@ -1053,7 +1053,7 @@ def sample_euler_h_m(model, x, sigmas, extra_args=None, callback=None, disable=N
         if sigmas[i + 1] > 0:
             x_2 = x + wave * d * dt
             d_2 = to_d(x_2, sigmas[i + 1], denoised)
-            d_prime = d * 0.335 + d_2 * 0.665
+            d_prime = d * (2 - wave) * 0.52 + d_2 * wave * 0.48
             x = x + d_prime * dt
         else:
             # Euler method
@@ -1081,7 +1081,7 @@ def sample_euler_h_m_b(model, x, sigmas, extra_args=None, callback=None, disable
         if sigmas[i + 1] > 0:
             x_2 = x + wave * d * dt
             d_2 = to_d(x_2, sigmas[i + 1], denoised)
-            d_prime = d * 0.335 + d_2 * 0.665
+            d_prime = d * (2 - wave) * 0.52 + d_2 * wave * 0.48
             x = x + d_prime * dt
         else:
             # Euler method
