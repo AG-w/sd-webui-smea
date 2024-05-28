@@ -8,7 +8,7 @@ TCD sampler from [dfl](https://github.com/dfl/comfyui-tcd-scheduler)
 ![sample2](https://github.com/AG-w/sd-webui-smea/blob/main/sample2.jpg?raw=true)    
 ![sample](https://github.com/AG-w/sd-webui-smea/blob/main/sample.jpg?raw=true)
 
-**RECOMMEND: Use Smea mbs2 or Smea mds2, they add details (or artifacts) more reliably**    
+**RECOMMEND: Use: Smea mbs2 (\#) / Smea mds2 (\#) / h max (#) / Max(2b/3c/4b), they add details (or artifacts) more reliably**    
 
 Also check [Dynamic Thresholding](https://github.com/mcmonkeyprojects/sd-dynamic-thresholding), you can add more details    
 
@@ -31,16 +31,16 @@ Euler Smea mbs: Euler Smea mb tweaked
 Euler Smea mcs: Euler Smea mc tweaked    
 Euler Smea mds: Euler Smea md tweaked      
 Euler Smea mbs2: Euler Smea mds with tweaked sigma          
-Euler Smea mds2: Euler Smea mds with tweaked sigma     
-Euler Smea mds2 max: Euler Smea mds2 with adjusted cosine wave      
+Euler Smea mds2: Euler Smea mds with tweaked sigma        
 Euler Smea mbs2 s: Euler Smea mbs2 with smoothed latent in process        
-Euler Smea mds2 s max: Euler Smea mds2 s with adjusted cosine wave         
 Euler Smea mds2 s: Euler Smea mds2 with smoothed latent in process     
+Euler Smea mds2 max: Euler Smea mds2 with adjusted cosine wave   
+Euler Smea mds2 s max: Euler Smea mds2 s with adjusted cosine wave         
 all sampler above stopped smea sampling at 1/6 total steps    
     
 Euler Max: from ananosleep's repo    
-Euler h max(x): Euler Max with adjusted cosine wave     
-Euler Max(x): Euler Max with adjusted cosine wave      
+Euler h max (\#): Euler Max with adjusted cosine wave     
+Euler Max(#): Euler Max with adjusted cosine wave      
 Euler Dy koishi-star: og Euler Dy made by koishi-star        
 Euler Smea Dy koishi-star: og Euler Smea Dy made by koishi-star     
 TCD / TCD Euler a: from dfl's repo        
