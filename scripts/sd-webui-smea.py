@@ -1186,9 +1186,10 @@ def sample_euler_h_m_f(model, x, sigmas, extra_args=None, callback=None, disable
     s_in = x.new_ones([x.shape[0]])
     for i in trange(len(sigmas) - 1, disable=disable):
         wave = math.cos(math.pi * 0.5 * i)/(0.5 * i + 1.5) + 1
+        wave_max = math.cos(0)/1.5 + 1
         sigma_min, sigma_max = sigmas[sigmas > 0].min(), sigmas.max()
         s_tmin, s_tmax = sigma_min if s_tmin == 0. else s_tmin, sigma_max if s_tmax == float('inf') else s_tmax
-        gamma = min((2 - wave) * ((2 ** 0.5 - 1) + s_churn) / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
+        gamma = min((wave_max - wave) * ((2 ** 0.5 - 1) + s_churn) / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
         eps = k_diffusion.sampling.BrownianTreeNoiseSampler(x, s_tmin, s_tmax, 0) if noise_sampler is None else noise_sampler
         sigma_hat = sigmas[i] * (gamma + 1)
         if gamma > 0:
