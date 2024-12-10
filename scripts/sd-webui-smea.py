@@ -1090,7 +1090,7 @@ def sample_euler_h_m_b(model, x, sigmas, extra_args=None, callback=None, disable
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if sigmas[i + 1] > 0:
             x_2 = x + (gamma + 1) * d * dt
-            d_2 = to_d(x_2, sigmas[i + 1], denoised)
+            d_2 = to_d(x_2, sigmas[i + 1] * (gamma + 1), denoised)
             d_prime = d * 0.5 + d_2 * 0.5
             x = x + d_prime * dt
         else:
