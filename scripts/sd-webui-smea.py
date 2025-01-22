@@ -92,7 +92,9 @@ def init():
         ('Euler h max d', sample_euler_h_m_d, ['k_euler'], {"brownian_noise": True}),
         ('Euler h max e', sample_euler_h_m_e, ['k_euler'], {"brownian_noise": True}),
         ('Euler h max f', sample_euler_h_m_f, ['k_euler'], {"brownian_noise": True}),
-        ('Euler h max g', sample_euler_h_m_g, ['k_euler'], {"brownian_noise": True}),   
+        ('Euler h max g', sample_euler_h_m_g, ['k_euler'], {"brownian_noise": True}),
+        ('Euler h max b c', sample_euler_h_m_b_c, ['k_euler'], {"brownian_noise": True}),
+        ('Euler h max b c CFG++', sample_euler_h_m_b_c_pp, ['k_euler'], {"brownian_noise": True, "cfgpp": True}),
         ('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
         ('Euler Smea Dy koishi-star', sample_euler_smea_dy_og, ['k_euler'], {}),
         ('TCD Euler a', sample_tcd_euler_a, ['tcd_euler_a'], {}),
@@ -152,6 +154,8 @@ def init():
         sample_euler_h_m_e: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_h_m_f: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_h_m_g: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_h_m_b_c: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
+        sample_euler_h_m_b_c_pp: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
         sample_euler_smea_dy_og: ['s_churn', 's_tmin', 's_tmax', 's_noise'],
     }
@@ -1238,6 +1242,84 @@ def sample_euler_h_m_g(model, x, sigmas, extra_args=None, callback=None, disable
         else:
             # Euler method
             x = x + (gamma + 1) * d * dt
+    return x
+
+@torch.no_grad()
+def sample_euler_h_m_b_c(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1., noise_sampler=None):
+    extra_args = {} if extra_args is None else extra_args
+    s_in = x.new_ones([x.shape[0]])
+    for i in trange(len(sigmas) - 1, disable=disable):
+        wave = math.cos(math.pi * 0.5 * i)/(0.5 * i + 1.5) + 1
+        sigma_min, sigma_max = sigmas[sigmas > 0].min(), sigmas.max()
+        s_tmin, s_tmax = sigma_min if s_tmin == 0. else s_tmin, sigma_max if s_tmax == float('inf') else s_tmax
+        gamma = min(wave * ((2 ** 0.5 - 1) + s_churn) / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
+        eps = k_diffusion.sampling.BrownianTreeNoiseSampler(x, s_tmin, s_tmax, 0) if noise_sampler is None else noise_sampler
+        gammaup = gamma + 1
+        sigma_hat = sigmas[i] * gammaup
+        if gamma > 0:	
+            x = x + eps(sigmas[i], sigmas[i + 1]) * s_noise * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
+        denoised = model(x, sigma_hat * s_in, **extra_args)
+        last_noise_uncond = model.last_noise_uncond
+        d = to_d(x, sigma_hat, denoised)
+        dt = sigmas[i + 1] - sigma_hat
+        if callback is not None:
+            callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
+        if i == 0:
+            x = x + gammaup * d * dt
+        elif i <= len(sigmas) - 4:
+            x_2 = x + gammaup * d * dt
+            d_2 = to_d(x_2, sigmas[i + 1] * gammaup, denoised)
+            x_3 = x_2 + gammaup * d_2 * dt
+            d_3 = to_d(x_3, sigmas[i + 2] * gammaup, denoised)
+            d_prime = d * 0.5 + d_2 * 0.375 + d_3 * 0.125		
+            x = x + d_prime * dt
+        elif sigmas[i + 1] > 0:
+            x_2 = x + gammaup * d * dt
+            d_2 = to_d(x_2, sigmas[i + 1] * gammaup, denoised)
+            d_prime = d * 0.5 + d_2 * 0.5		
+            x = x + d_prime * dt
+        else:
+            # Euler method
+            x = x + gammaup * d * dt
+    return x
+
+@torch.no_grad()
+def sample_euler_h_m_b_c_pp(model, x, sigmas, extra_args=None, callback=None, disable=None, s_churn=0., s_tmin=0., s_tmax=float('inf'), s_noise=1., noise_sampler=None):
+    extra_args = {} if extra_args is None else extra_args
+    s_in = x.new_ones([x.shape[0]])
+    for i in trange(len(sigmas) - 1, disable=disable):
+        wave = math.cos(math.pi * 0.5 * i)/(0.5 * i + 1.5) + 1
+        sigma_min, sigma_max = sigmas[sigmas > 0].min(), sigmas.max()
+        s_tmin, s_tmax = sigma_min if s_tmin == 0. else s_tmin, sigma_max if s_tmax == float('inf') else s_tmax
+        gamma = min(wave * ((2 ** 0.5 - 1) + s_churn) / (len(sigmas) - 1), 2 ** 0.5 - 1) if s_tmin <= sigmas[i] <= s_tmax else 0.
+        eps = k_diffusion.sampling.BrownianTreeNoiseSampler(x, s_tmin, s_tmax, 0) if noise_sampler is None else noise_sampler
+        gammaup = gamma + 1
+        sigma_hat = sigmas[i] * gammaup
+        if gamma > 0:	
+            x = x + eps(sigmas[i], sigmas[i + 1]) * s_noise * (sigma_hat ** 2 - sigmas[i] ** 2) ** 0.5
+        denoised = model(x, sigma_hat * s_in, **extra_args)
+        last_noise_uncond = model.last_noise_uncond
+        d = to_d(x, sigma_hat, denoised)
+        dt = sigmas[i + 1] - sigma_hat
+        if callback is not None:
+            callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
+        if i == 0:
+            x = x + gammaup * d * dt
+        elif i <= len(sigmas) - 4:
+            x_2 = x + gammaup * d * dt
+            d_2 = to_d(x_2 - denoised + last_noise_uncond, sigmas[i + 1] * gammaup, denoised)
+            x_3 = x_2 + gammaup * d_2 * dt
+            d_3 = to_d(x_3 - denoised + last_noise_uncond, sigmas[i + 2] * gammaup, denoised)
+            d_prime = d * 0.5 + d_2 * 0.375 + d_3 * 0.125		
+            x = x + d_prime * dt
+        elif sigmas[i + 1] > 0:
+            x_2 = x + gammaup * d * dt
+            d_2 = to_d(x_2 - denoised + last_noise_uncond, sigmas[i + 1] * gammaup, denoised)
+            d_prime = d * 0.5 + d_2 * 0.5		
+            x = x + d_prime * dt
+        else:
+            # Euler method
+            x = x + gammaup * d * dt
     return x
 
 @torch.no_grad()
