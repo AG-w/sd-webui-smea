@@ -1307,14 +1307,14 @@ def sample_euler_h_m_b_c_pp(model, x, sigmas, extra_args=None, callback=None, di
             x = x + gammaup * d * dt
         elif i <= len(sigmas) - 4:
             x_2 = x + gammaup * d * dt
-            d_2 = to_d(x_2 - denoised + last_noise_uncond, sigmas[i + 1] * gammaup, denoised)
+            d_2 = to_d(x_2, sigmas[i + 1] * gammaup, denoised)
             x_3 = x_2 + gammaup * d_2 * dt
-            d_3 = to_d(x_3, sigmas[i + 2] * gammaup, denoised)
+            d_3 = to_d(x_3, sigmas[i + 2] * gammaup, last_noise_uncond)
             d_prime = d * 0.5 + d_2 * 0.375 + d_3 * 0.125		
             x = x + d_prime * dt
         elif sigmas[i + 1] > 0:
             x_2 = x + gammaup * d * dt
-            d_2 = to_d(x_2 - denoised + last_noise_uncond, sigmas[i + 1] * gammaup, denoised)
+            d_2 = to_d(x_2, sigmas[i + 1] * gammaup, last_noise_uncond)
             d_prime = d * 0.5 + d_2 * 0.5		
             x = x + d_prime * dt
         else:
