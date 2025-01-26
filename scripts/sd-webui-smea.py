@@ -1065,13 +1065,13 @@ def sample_euler_h_m(model, x, sigmas, extra_args=None, callback=None, disable=N
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if sigmas[i + 1] > 0:
-            x_2 = x + (gamma + 1) * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * (gamma + 1), denoised)
             d_prime = d * 0.5 + d_2 * 0.5
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + (gamma + 1) * d * dt
+            x = x + d * dt
     return x
 
 @torch.no_grad()
@@ -1093,13 +1093,13 @@ def sample_euler_h_m_b(model, x, sigmas, extra_args=None, callback=None, disable
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if sigmas[i + 1] > 0:
-            x_2 = x + (gamma + 1) * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * (gamma + 1), denoised)
             d_prime = d * 0.5 + d_2 * 0.5
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + (gamma + 1) * d * dt
+            x = x + d * dt
     return x	
 
 @torch.no_grad()
@@ -1121,13 +1121,13 @@ def sample_euler_h_m_c(model, x, sigmas, extra_args=None, callback=None, disable
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if sigmas[i + 1] > 0:
-            x_2 = x + (gamma + 1) * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * (gamma + 1), denoised)
             d_prime = d * 0.5 + d_2 * 0.5
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + (gamma + 1) * d * dt
+            x = x + d * dt
     return x	
 
 @torch.no_grad()
@@ -1149,13 +1149,13 @@ def sample_euler_h_m_d(model, x, sigmas, extra_args=None, callback=None, disable
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if sigmas[i + 1] > 0:
-            x_2 = x + (gamma + 1) * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * (gamma + 1), denoised)
             d_prime = d * 0.5 + d_2 * 0.5
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + (gamma + 1) * d * dt
+            x = x + d * dt
     return x
 
 @torch.no_grad()
@@ -1177,13 +1177,13 @@ def sample_euler_h_m_e(model, x, sigmas, extra_args=None, callback=None, disable
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if sigmas[i + 1] > 0:
-            x_2 = x + (gamma + 1) * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * (gamma + 1), denoised)
             d_prime = d * 0.5 + d_2 * 0.5
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + (gamma + 1) * d * dt
+            x = x + d * dt
     return x
 
 @torch.no_grad()
@@ -1206,13 +1206,13 @@ def sample_euler_h_m_f(model, x, sigmas, extra_args=None, callback=None, disable
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if sigmas[i + 1] > 0:
-            x_2 = x + (gamma + 1) * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * (gamma + 1), denoised)
             d_prime = d * 0.5 + d_2 * 0.5
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + (gamma + 1) * d * dt
+            x = x + d * dt
     return x	
 
 @torch.no_grad()
@@ -1235,13 +1235,13 @@ def sample_euler_h_m_g(model, x, sigmas, extra_args=None, callback=None, disable
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if sigmas[i + 1] > 0:
-            x_2 = x + (gamma + 1) * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * (gamma + 1), denoised)
             d_prime = d * 0.5 + d_2 * 0.5
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + (gamma + 1) * d * dt
+            x = x + d * dt
     return x
 
 @torch.no_grad()
@@ -1265,22 +1265,22 @@ def sample_euler_h_m_b_c(model, x, sigmas, extra_args=None, callback=None, disab
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if i == 0:
-            x = x + gammaup * d * dt
+            x = x + d * dt
         elif i <= len(sigmas) - 4:
-            x_2 = x + gammaup * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * gammaup, denoised)
-            x_3 = x_2 + gammaup * d_2 * dt
+            x_3 = x_2 + d_2 * dt
             d_3 = to_d(x_3, sigmas[i + 2] * gammaup, denoised)
             d_prime = d * 0.5 + d_2 * 0.375 + d_3 * 0.125		
             x = x + d_prime * dt
         elif sigmas[i + 1] > 0:
-            x_2 = x + gammaup * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * gammaup, denoised)
             d_prime = d * 0.5 + d_2 * 0.5		
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + gammaup * d * dt
+            x = x + d * dt
     return x
 
 @torch.no_grad()
@@ -1304,22 +1304,22 @@ def sample_euler_h_m_b_c_pp(model, x, sigmas, extra_args=None, callback=None, di
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised}) 
         if i == 0:
-            x = x + gammaup * d * dt
+            x = x + d * dt
         elif i <= len(sigmas) - 4:
-            x_2 = x + gammaup * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * gammaup, denoised)
-            x_3 = x_2 + gammaup * d_2 * dt
+            x_3 = x_2 + d_2 * dt
             d_3 = to_d(x_3, sigmas[i + 2] * gammaup, last_noise_uncond)
             d_prime = d * 0.5 + d_2 * 0.375 + d_3 * 0.125		
             x = x + d_prime * dt
         elif sigmas[i + 1] > 0:
-            x_2 = x + gammaup * d * dt
+            x_2 = x + d * dt
             d_2 = to_d(x_2, sigmas[i + 1] * gammaup, denoised)
             d_prime = d * 0.5 + d_2 * 0.5		
             x = x + d_prime * dt
         else:
             # Euler method
-            x = x + gammaup * d * dt
+            x = x + d * dt
     return x
 
 @torch.no_grad()
