@@ -1567,7 +1567,17 @@ def sample_tcd_euler_a(model, x, sigmas, extra_args=None, callback=None, disable
     extra_args = {} if extra_args is None else extra_args
     noise_sampler = default_noise_sampler(x) if noise_sampler is None else noise_sampler
     s_in = x.new_ones([x.shape[0]])
-    for i in trange(len(sigmas) - 1, disable=disable):
+
+    def noise_scaling(sigma, noise, latent_image, max_denoise=False):
+        if max_denoise:
+            noise = noise * torch.sqrt(1.0 + sigma ** 2.0)
+        else:
+            noise = noise * sigma
+
+        noise += latent_image
+        return noise
+
+	for i in trange(len(sigmas) - 1, disable=disable):
         denoised = model(x, sigmas[i] * s_in, **extra_args)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigmas[i], 'denoised': denoised})
@@ -1590,8 +1600,9 @@ def sample_tcd_euler_a(model, x, sigmas, extra_args=None, callback=None, disable
         x += d * dt
 
         if sigma_to > 0 and gamma > 0:
-            x =  x + noise_sampler(sigmas[i], sigmas[i + 1]) * sigma_up
-    return x
+            #x =  x + noise_sampler(sigmas[i], sigmas[i + 1]) * sigma_up
+            x = noise_scaling(sigma_up, noise_sampler(sigma_from, sigma_to), x)
+	return x
 
 @torch.no_grad()
 def sample_tcd(model, x, sigmas, extra_args=None, callback=None, disable=None, noise_sampler=None, gamma=0.3):
