@@ -97,7 +97,7 @@ def init():
         ('Euler h max b c CFG++', sample_euler_h_m_b_c_pp, ['k_euler'], {"brownian_noise": True, "cfgpp": True}),
         ('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
         ('Euler Smea Dy koishi-star', sample_euler_smea_dy_og, ['k_euler'], {}),
-        (' Euler a', sample__euler_a, ['_euler_a'], {}),
+        ('TCD Euler a', sample_tcd_euler_a, ['tcd_euler_a'], {}),
         ('TCD', sample_tcd, ['tcd'], {}),
     ]
 
