@@ -97,7 +97,7 @@ def init():
         ('Euler h max b c CFG++', sample_euler_h_m_b_c_pp, ['k_euler'], {"brownian_noise": True, "cfgpp": True}),
         ('Euler Dy koishi-star', sample_euler_dy_og, ['k_euler'], {}),
         ('Euler Smea Dy koishi-star', sample_euler_smea_dy_og, ['k_euler'], {}),
-        ('TCD Euler a', sample_tcd_euler_a, ['tcd_euler_a'], {}),
+        (' Euler a', sample__euler_a, ['_euler_a'], {}),
         ('TCD', sample_tcd, ['tcd'], {}),
     ]
 
@@ -1577,7 +1577,7 @@ def sample_tcd_euler_a(model, x, sigmas, extra_args=None, callback=None, disable
         noise += latent_image
         return noise
 
-	for i in trange(len(sigmas) - 1, disable=disable):
+    for i in trange(len(sigmas) - 1, disable=disable):
         denoised = model(x, sigmas[i] * s_in, **extra_args)
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigmas[i], 'denoised': denoised})
@@ -1592,7 +1592,7 @@ def sample_tcd_euler_a(model, x, sigmas, extra_args=None, callback=None, disable
 
         if sigma_down > sigma_to:
             sigma_down = sigma_to
-        sigma_up = (sigma_to ** 2 - sigma_down ** 2) ** 0.5     
+        sigma_up = (sigma_to ** 2 - sigma_down ** 2) ** 0.5 
 
         # same as euler ancestral
         d = to_d(x, sigma_from, denoised)
@@ -1602,7 +1602,7 @@ def sample_tcd_euler_a(model, x, sigmas, extra_args=None, callback=None, disable
         if sigma_to > 0 and gamma > 0:
             #x =  x + noise_sampler(sigmas[i], sigmas[i + 1]) * sigma_up
             x = noise_scaling(sigma_up, noise_sampler(sigma_from, sigma_to), x)
-	return x
+    return x
 
 @torch.no_grad()
 def sample_tcd(model, x, sigmas, extra_args=None, callback=None, disable=None, noise_sampler=None, gamma=0.3):
